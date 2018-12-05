@@ -23,6 +23,27 @@ height = height - margin.top - margin.bottom;
 
 var data = {};
 
+ var data3 = d3.range(0, 9).map(function (d) { return new Date(2010 + d, 10, 3); });
+
+  var slider3 = d3.sliderHorizontal()
+    .min(d3.min(data3))
+    .max(d3.max(data3))
+    .step(1000 * 60 * 60 * 24 * 365)
+    .width(400)
+    .tickFormat(d3.timeFormat('%Y'))
+    .tickValues(data3)
+    .on('onchange', val => {
+        year = d3.timeFormat('%Y')(val);
+        //alert(year)
+        draw(year)
+    });
+
+  var group3 = d3.select("svg")
+    .append("g")
+    .attr("transform", "translate(300,20)");
+
+  group3.call(slider3);
+
 var x_scale = d3.scaleBand()
     .rangeRound([0, width])
     .padding(0.1);
@@ -111,6 +132,8 @@ function draw(year) {
         .transition(t)
         .call(y_axis);
 
+    svg.select('.x.axis').selectAll("text").style("font-size","20")
+    svg.select('.y.axis').selectAll("text").style("font-size","15")
 }
 
 /*d3.queue()
