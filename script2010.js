@@ -40,13 +40,14 @@ var data = {};
         draw(year)
     });
 
-  d3.select("svg").append("text").text("Top 10 Tags in 2010").attr("x" , 550).attr("y" , 40).style("font-family" , "Helvetica").attr("font-size" ,40).attr("font-weight",100)
-  d3.select("svg").append("text").text("Tags").attr("x" , width/2).attr("y" , height + 70).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100)
+  d3.select("svg").append("text").text("Top 10 Tags in 2010").attr("x" , width/2).attr("y" , 40).style("font-family" , "Helvetica").attr("font-size" ,30).attr("font-weight",100).attr("font-weight","bold")
+  d3.select("svg").append("text").text("Tags").attr("x" , width/2).attr("y" , height + 70).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100).attr("font-weight","bold")
   d3.select("svg").append("text").text("Number of posts").attr("transform",`translate(30,${height/2 + margin.top})rotate(-90)`).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100)
+    .attr("font-weight","bold")
 
   var group3 = d3.select("svg")
     .append("g")
-    .attr("transform", "translate(500,70)");
+    .attr("transform", `translate(${width/2},70)`);
 
   group3.call(slider3);
 
@@ -56,9 +57,6 @@ var x_scale = d3.scaleBand()
 
 var y_scale = d3.scaleLinear()
     .range([height, 0]);
-
-var colour_scale = d3.scaleQuantile()
-    .range(["#ffffe5", "#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
 
 var y_axis = d3.axisLeft(y_scale);
 var x_axis = d3.axisBottom(x_scale);
@@ -99,7 +97,6 @@ function draw(year) {
     });
 
     y_scale.domain([0, max_value]);
-    colour_scale.domain([0, max_value]);
 
     var bars = svg.selectAll('.bar')
         .data(csv_data)
