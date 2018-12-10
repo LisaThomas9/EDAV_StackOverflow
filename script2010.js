@@ -7,7 +7,7 @@ var height = document.getElementById('vis')
 var margin = {
     top: 10,
     bottom: 70,
-    left: 70,
+    left: 100,
     right: 20
 }
 
@@ -37,11 +37,12 @@ var data = {};
     .tickValues(data3)
     .on('onchange', val => {
         year = d3.timeFormat('%Y')(val);
-        //alert(year)
         draw(year)
     });
 
   d3.select("svg").append("text").text("Top 10 Tags in 2010").attr("x" , 550).attr("y" , 40).style("font-family" , "Helvetica").attr("font-size" ,40).attr("font-weight",100)
+  d3.select("svg").append("text").text("Tags").attr("x" , width/2).attr("y" , height + 70).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100)
+  d3.select("svg").append("text").text("Number of posts").attr("transform",`translate(30,${height/2 + margin.top})rotate(-90)`).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100)
 
   var group3 = d3.select("svg")
     .append("g")
