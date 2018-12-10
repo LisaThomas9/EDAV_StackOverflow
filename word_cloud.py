@@ -1,6 +1,8 @@
 from wordcloud import WordCloud, STOPWORDS 
 import matplotlib.pyplot as plt 
 import pandas as pd 
+import numpy as np
+from PIL import Image
 import csv
 # Reads 'Youtube04-Eminem.csv' file  
 #df = pd.read_csv(r"Youtube04-Eminem.csv", encoding ="latin-1") 
@@ -24,9 +26,12 @@ with open("output.csv","r") as infile:
       
 '''
 comment_words = input()
+wave_mask = np.array(Image.open( "./images/circle.jpg"))
+
 wordcloud = WordCloud(width = 800, height = 800, 
                 background_color ='white', 
                 stopwords = stopwords, 
+                mask = wave_mask,
                 min_font_size = 10).generate(comment_words) 
   
 # plot the WordCloud image                        
