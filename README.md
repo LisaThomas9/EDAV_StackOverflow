@@ -1,0 +1,1 @@
+In this project, we aim to analyze the data related to questions posted on Stack Overflow. Data collection is done by web-scraping in python. Exploratory Data Analysis and Visualizations are done in R
