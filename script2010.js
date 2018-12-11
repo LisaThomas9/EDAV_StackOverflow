@@ -21,7 +21,8 @@ var svg = d3.select('#vis')
 width = width - margin.left - margin.right;
 height = height - margin.top - margin.bottom;
 
-svg.append("rect").attr("x",-200).attr("y",-20).attr('width', width+400).style("fill"  ,"F6E5C3")
+svg.append("rect").attr("x",-200).attr("y",-20).attr('width', width+400)
+    .style("fill"  ,"white")
     .attr('height', height+200)
 
 var data = {};
@@ -40,7 +41,7 @@ var data = {};
         draw(year)
     });
 
-  d3.select("svg").append("text").text("Top 10 Tags in 2010").attr("x" , width/2).attr("y" , 40).style("font-family" , "Helvetica").attr("font-size" ,30).attr("font-weight",100).attr("font-weight","bold")
+  d3.select("svg").append("text").text("Top 10 Tags in 2010").attr("x" , width/2).attr("y" , 40).style("font-family" , "Helvetica").attr("font-size" ,30).attr("font-weight",40).attr("font-weight","bold")
   d3.select("svg").append("text").text("Tags").attr("x" , width/2).attr("y" , height + 70).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100).attr("font-weight","bold")
   d3.select("svg").append("text").text("Number of posts").attr("transform",`translate(30,${height/2 + margin.top})rotate(-90)`).style("font-family" , "Helvetica").attr("font-size" ,20).attr("font-weight",100)
     .attr("font-weight","bold")
@@ -63,7 +64,7 @@ var x_axis = d3.axisBottom(x_scale);
 
 svg.append('g')
     .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + height + ')');
+    .attr('transform', `translate(0,${height})`);
 
 svg.append('g')
     .attr('class', 'y axis');
@@ -81,11 +82,8 @@ data["2010"] = [['ggplot2', 243], ['dataframe', 129], ['statistics', 122], ['plo
 draw("2010")
 
 function draw(year) {
-    //alert("in draw")
+    svg.selectAll("text.label").text("")
     var csv_data = data[year];
-    var t = d3.transition()
-        .duration(2000);
-
     var months = csv_data.map(function(d) {
         return d[0];
     });
@@ -116,14 +114,41 @@ function draw(year) {
         .attr('y', height)
         .attr('height', 0)
 
-    new_bars.merge(bars).style('fill','8682A7')
-        .transition(t)
+    new_bars.merge(bars)
+        .style('fill','lightblue')
+        .transition()
+        .duration(2000)
         .attr('y', function(d) {
             return y_scale(+d[1]);
         })
         .attr('height', function(d) {
             return height - y_scale(+d[1])
         })
+        .on("end", function(d){
+            var txt = svg.selectAll("text.label")
+                        .data(csv_data)
+
+            txt.enter()
+               .append("text")
+               .attr("class","label")
+               .text(function(d){ if(d[1]> 0) return d[1]})
+
+               .attr("x", function(d, i) {
+               return i * (width / csv_data.length) + x_scale.bandwidth()/2 ;
+               })
+               .attr("y", function(d) {
+                   return y_scale(+d[1]);
+               });
+
+            txt.text(function(d){ if(d[1]> 0) return d[1]})
+
+               .attr("x", function(d, i) {
+               return i * (width / csv_data.length) + x_scale.bandwidth()/2 ;
+               })
+               .attr("y", function(d) {
+                   return y_scale(+d[1]);
+               });
+        });
       
         
 
@@ -131,33 +156,10 @@ function draw(year) {
         .call(x_axis);
 
     svg.select('.y.axis')
-        .transition(t)
+        .transition()
+        .duration(2000)
         .call(y_axis);
 
     svg.select('.x.axis').selectAll("text").style("font-size","20")
     svg.select('.y.axis').selectAll("text").style("font-size","15")
 }
-
-/*d3.queue()
-    .defer(d3.csv, 'monthly_data_2014.csv')
-    .defer(d3.csv, 'monthly_data_2013.csv')
-    .defer(d3.csv, 'monthly_data_2012.csv')
-    .defer(d3.csv, 'monthly_data_2011.csv')
-    .defer(d3.csv, 'monthly_data_2010.csv')
-    .defer(d3.csv, 'monthly_data_2009.csv')
-    .await(function(error, d2014, d2013, d2012, d2011, d2010, d2009) {
-
-        data['2009'] = d2009;
-        data['2010'] = d2010;
-        data['2011'] = d2011;
-        data['2012'] = d2012;
-        data['2013'] = d2013;
-        data['2014'] = d2014;
-        draw('2014');
-    });
-*/
-//replace this with maybe sliderHorizontal
-var slider = d3.select('#year');
-slider.on('change', function() {
-    draw(this.value);
-});
